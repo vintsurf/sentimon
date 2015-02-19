@@ -1,7 +1,7 @@
 # sentimon
 
-# Based on Tweelead - https://github.com/taskulu/tweelead
+## Based on Tweelead - https://github.com/taskulu/tweelead
 
-# Search for tweets contining specific keywords + sentiment analysis
+## Search for tweets contining specific keywords + sentiment analysis
 
-# APIs - Twitter and Aylien
+## APIs - Twitter and Aylien
