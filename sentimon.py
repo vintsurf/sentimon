@@ -3,6 +3,7 @@
 #Based on https://github.com/taskulu/tweelead
 
 from aylienapiclient import textapi
+from aylienapiclient.errors import HttpError
 from TwitterAPI import TwitterAPI, TwitterRestPager
 #import sys ##If default encoding is set to ASCII
 #reload(sys)
@@ -20,13 +21,23 @@ api = TwitterAPI(CONSUMER_KEY,
                  ACCESS_TOKEN_KEY,
                  ACCESS_TOKEN_SECRET)
 
-pager = TwitterRestPager(api, 'search/tweets', {'q': 'keywords,comma,separated'})
+count = 0
 
-for item in pager.get_iterator():
+pager = TwitterRestPager(api, 'search/tweets', {'q': 'keywords,comma,separated', 'count':100})
+
+for item in pager.get_iterator(wait=7):
 	tweet = item['text']
 	name = item['user']['screen_name']
-	s = c.Sentiment({'text' : tweet})
-	print ("Username: {0} | Tweet: {1} | Polarity: {2} | Confidence: {3} | Subjectivity: {4} | Confidence: {5}".format(name, tweet, s['polarity'], s['polarity_confidence'], s['subjectivity'], s['subjectivity_confidence'])) 
+	try:
+		s = c.Sentiment({'text' : tweet})
+	except HttpError:
+		pass
+	if 'text' in item:
+		count += 1
+	elif 'message' in item['code'] == 88:
+		print(item['message'])
+		break
+	print ("{0} | Username: {1} | Tweet: {2} | Polarity: {3} | Confidence: {4} | Subjectivity: {5} | Confidence: {6}".format(count, name, tweet, s['polarity'], s['polarity_confidence'], s['subjectivity'], s['subjectivity_confidence'])) 
 
 
 	
